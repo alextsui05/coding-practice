@@ -56,6 +56,6 @@ if __FILE__ == $0
     File.open('tree.txt', 'w') do |file|
         file.puts nodes[1]
     end
-    tree = load_tree('tree.txt')
+    tree = load_tree('data/tree.txt')
     puts tree   
 end
