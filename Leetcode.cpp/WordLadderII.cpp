@@ -15,6 +15,14 @@ public:
     typedef pair<int, string> node;
     typedef priority_queue<node, vector<node>, greater<node> > min_heap;
 
+    /**
+    Collect paths leading up to word.
+
+    \param word - the current node
+    \param pred - the list of predecessors associated with a node
+    \param partial - the current working path
+    \param res - the list of finalized paths
+    */
     void paths(const string& word, const unordered_map<string, set<string> >& pred,
         vector<string>* partial, vector<vector<string> >* res)
     {
@@ -30,29 +38,9 @@ public:
         partial->pop_back();
     }
 
-    void debug(const unordered_map<string, set<string> >& pred) {
-        for (auto& it : pred) {
-            cout << it.first << ": ";
-            for (auto& it2 : it.second) {
-                cout << it2 << " ";
-            }
-            cout << endl;
-        }
-    }
-
-    vector<string> findPath( const string& word, const unordered_map<string, set<string> >& pred )
-    {
-        vector<string> res;
-        string it(word);
-        while (pred.count(it)) {
-            res.push_back(it);
-            const set<string>& preds = pred.find(it)->second;
-            it = *preds.begin();
-        }
-        res.push_back(it);
-        return res;
-    }
-
+    /**
+    Find all shortest paths from beginWord to endWord.
+    */
     vector<vector<string>> findLadders(string beginWord, string endWord, unordered_set<string> &wordDict) {
         vector<vector<string> > res;
         unordered_set<string> visited;
@@ -64,6 +52,7 @@ public:
             res.push_back(vector<string>(1, endWord));
             return res;
         }
+
         q.push(node(1, beginWord));
         while (!q.empty()) {
             node n = q.top();
@@ -79,12 +68,7 @@ public:
                 //debug(pred);
                 vector<string> partial;
                 paths(endWord, pred, &partial, &res);
-                //auto it = remove_if(res.begin(), res.end(), [=](vector<string>& path) { return path.size() != n.first; });
-                //res.erase(it, res.end());
 
-                // just find one path
-                //vector<string> path = findPath(word, pred);
-                //res.push_back(path);
                 return res;
             }
             for (int i = 0; i < word.size(); ++i) {
@@ -92,24 +76,32 @@ public:
                     string nextWord(word);
                     int nextDist = n.first + 1;
                     nextWord[i] = 'a' + j;
-                    if (nextWord == endWord && !maxDist) {
+
+                    if (nextWord == endWord && !maxDist)
                         maxDist = nextDist;
-                        //cout << "max dist = " << maxDist << endl;
-                    }
                     if (visited.count(nextWord) || !wordDict.count(nextWord))
                         continue;
                     if (!dist.count(nextWord))
                         dist[nextWord] = nextDist;
-                    if (nextDist > dist[nextWord] || (maxDist && nextDist > maxDist)) {
-                        //cout << "avoided cycle" << endl;
+                    if (nextDist > dist[nextWord] || (maxDist && nextDist > maxDist))
                         continue;
-                    }
+
                     pred[nextWord].insert(word);
                     q.push(node(nextDist, nextWord));
                 }
             }
         }
         return res;
+    }
+
+    void debug(const unordered_map<string, set<string> >& pred) {
+        for (auto& it : pred) {
+            cout << it.first << ": ";
+            for (auto& it2 : it.second) {
+                cout << it2 << " ";
+            }
+            cout << endl;
+        }
     }
 };
 
