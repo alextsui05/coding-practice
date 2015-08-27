@@ -17,21 +17,26 @@ class Solution {
 public:
     int countDigitOne(int n) {
         int sum = 0;
-        int cols = log(n)/log(10) + 1;
+        int cols = 0;
+        for (int i = n; i > 0; i /= 10, ++cols);
         int base = 1;
         for (int i = 0; i < cols; ++i) {
             int digit = (n / base) % 10;
             // first add contribution due to right side
+            int contrib = 0;
             if (digit == 1) {
                 int rem = n % base;
-                sum += rem + 1;
+                contrib += rem + 1;
             } else if (digit > 1) {
-                sum += base;
+                contrib += base;
             }
             // add contribution due to left side
             int ones = ll(n)/(ll(10) * base);
             ones *= base;
-            sum += ones;
+            contrib += ones;
+
+            //std::cout << "contrib from i = " << i << ": " << contrib << std::endl;
+            sum += contrib;
 
             base *= 10;
         }
