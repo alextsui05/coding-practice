@@ -4,6 +4,15 @@
 #include <algorithm>
 using namespace std;
 
+void print(vector<int>& nums) {
+    for (int i = 0; i < nums.size( ); ++i) {
+        std::cout << nums[i];
+        if (i < nums.size() - 1)
+            std::cout << ' ';
+    }
+    std::cout << std::endl;
+}
+
 class Solution {
 public:
     /**
@@ -25,6 +34,7 @@ public:
                 ++zi;
                 ++i;
             }
+            print(nums);
         }
     }
 };
@@ -38,12 +48,7 @@ int main(int argc, char* argv[])
     }
     Solution soln;
     soln.moveZeroes(nums);
-    for (int i = 0; i < nums.size( ); ++i) {
-        std::cout << nums[i];
-        if (i < nums.size() - 1)
-            std::cout << ' ';
-    }
-    std::cout << std::endl;
+    print(nums);
 
     return 0;
 }
