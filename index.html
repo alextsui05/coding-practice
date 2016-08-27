@@ -163,6 +163,10 @@ Error message and password prompt
 
 <li>2016-08-25</li>
 
+<li>2016-08-27</li>
+
+<li>CountNumbersWithUniqueDigits</li>
+
 <li>CustomStyles</li>
 
 <li>Diary</li>
@@ -7837,8 +7841,9 @@ Error message and password prompt
     }
 }</pre>
 </div>
-<div created="20160826080845515" creator="atsui" modified="20160826081215160" modifier="atsui" title="$:/DefaultTiddlers">
+<div created="20160826080845515" creator="atsui" modified="20160827193558085" modifier="atsui" title="$:/DefaultTiddlers">
 <pre>Home
+2016-08-27
 2016-08-25</pre>
 </div>
 <div status="complete" title="$:/Import">
@@ -7956,13 +7961,13 @@ Error message and password prompt
 <div created="20160824195235628" creator="atsui" modified="20160826065752466" modifier="atsui" title="$:/state/tab-1749438307">
 <pre>$:/core/ui/ControlPanel/Info</pre>
 </div>
-<div created="20160824195210648" creator="atsui" modified="20160826081202918" modifier="atsui" title="$:/state/tab/sidebar--1835078512">
-<pre>$:/core/ui/SideBar/Recent</pre>
+<div created="20160824195210648" creator="atsui" modified="20160827193459226" modifier="atsui" title="$:/state/tab/sidebar--1835078512">
+<pre>$:/plugins/bj/calendar/sidbar</pre>
 </div>
 <div created="20160824193632937" creator="a" modified="20160824193633321" modifier="atsu" title="$:/status/UserName">
 <pre>atsui</pre>
 </div>
-<div list="Home 2016-08-25 RangeSumQuery" title="$:/StoryList">
+<div list="Home 2016-08-27 CountNumbersWithUniqueDigits 2016-08-25" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8116,6 +8121,55 @@ There are some quizzes at the ends of these sections that I should review.
 
 -----
 So I wanted to apply it for solving RangeSumQuery on LeetCode today.</pre>
+</div>
+<div created="20160827193502307" creator="atsui" modified="20160827204652785" modifier="atsui" tags="Journal" title="2016-08-27">
+<pre>Solved [[CountNumbersWithUniqueDigits]]. I really had difficulty with this one because I was confusing two approaches: you can either construct the numbers or simply count the numbers and I was trying to do both, which was confusing.
+
+I also had a faulty dynamic programming formulation (memoize over the possible selections of digits) that was complicated and did not make sense for building up subsequent answers.
+
+Looking back, memoization over the number of digits is straightforward and simple.</pre>
+</div>
+<div created="20160827193641311" creator="atsui" modified="20160827204734636" modifier="atsui" tags="Writeup" title="CountNumbersWithUniqueDigits">
+<pre>!Problem
+Given an integer `n`, count all numbers between 0 and `10**n` exclusive, that has unique digits.
+
+!Generative Approach
+One way to count the numbers is to generate all the numbers. We can build up a number appending digits, keeping track of digits we've already used so that we don't use a digit twice to maintain uniqueness.
+
+Note that we don't go beyond numbers with 10 digits because there are only 10 decimal digits and picking an 11th one will be a repeat, according to pigeonhole principle.
+
+Note that the leading digit must be nonzero.
+
+A recursive approach will extend a given number by a digit, and it may look something like this.
+
+# Count the number generated so far.
+# If we can still extend the number, then pick an unused digit (nonzero if it's the leading digit), mark the digit used, and append it to the number.
+# Recursively count the unique numbers we can get from the extended numbers and add it to the total.
+
+Note that the range of generated numbers will overflow a 32-bit integer. Since we are just counting, it doesn't matter, but if we want to generate the numbers, we should use a 64-bit long representation.
+
+!!Implementation
+Here's my [[Java implementation|https://github.com/alextsui05/coding-practice/blob/ec8cdd0bed35b66c08fbb272debb6838954a2096/Leetcode.java/src/leetcode/CountNumbersWithUniqueDigits.java#L63]]. The recursive helper function on line 72 is key:
+
+```
+ private int doCount(int n, int i, long num, int mask)
+```
+
+Imagine `i` as the position of the cursor. We pick a digit to put at `i`, mark it used, increment `i`, and repeat until `i` reaches the end determined by `n`, and we count every number along the way. The number being assembled is tracked in the `num` argument, but strictly speaking it is not used because we are just counting.
+
+!!Complexity
+The recursion looks factorial: For each numbers place, you have a choice out of 9 digits, which decreases by one as the number moves along. But `n` is small: `n = 10` in the worst case, so the number of recursive calls `n!` comes out to be on the order of `10**6` which is still manageable. In fact, the dependence on `n` stops there so you might say this is `O(1)` (although with a big constant). The results can be memoized so this can be a one-time preprocessing cost.
+
+!Dynamic Programming Approach
+Suppose we can count `S_k` the numbers with unique digits with at most length `k`. Then `S_(k+1)` is just `S_k` plus the numbers with unique digits with exactly length `k+1`.
+
+Consider a number of length `k`. The first digit `d_0` is nonzero: so there's 9 ways to choose that. The second digit `d_1` is any digit other than `d_0`: so that's 9 ways to choose it. The `i`-th digit can be any digit that doesn't match any before it: so that's `10 - (i - 1)` choices.
+
+!!Implementation
+Here's my [[Java implementation|https://github.com/alextsui05/coding-practice/blob/ec8cdd0bed35b66c08fbb272debb6838954a2096/Leetcode.java/src/leetcode/CountNumbersWithUniqueDigits.java#L41]].
+
+!!Complexity
+Strictly speaking, we really only need `O(1)` space because the unique digit numbers stop after 10 digits. By the same argument, time complexity is `O(1)` time: we fill this fixed-sized table once with a linear pass and just look up the answer in constant time afterwards.</pre>
 </div>
 <div created="20160826065423846" creator="atsui" modified="20160826065502746" modifier="atsui" tags="$:/tags/Stylesheet" title="CustomStyles" type="text/css">
 <pre>.tc-sidebar-lists a.tc-tiddlylink-resolves {
