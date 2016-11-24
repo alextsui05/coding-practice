@@ -165,6 +165,8 @@ Error message and password prompt
 
 <li>2016-08-27</li>
 
+<li>2016-08-31</li>
+
 <li>CountNumbersWithUniqueDigits</li>
 
 <li>CustomStyles</li>
@@ -176,6 +178,8 @@ Error message and password prompt
 <li>Java8StreamsAPI</li>
 
 <li>RangeSumQuery</li>
+
+<li>WordParse</li>
 
 </ul>
 </p>
@@ -7967,7 +7971,7 @@ Error message and password prompt
 <div created="20160824193632937" creator="a" modified="20160824193633321" modifier="atsu" title="$:/status/UserName">
 <pre>atsui</pre>
 </div>
-<div list="Home 2016-08-27 CountNumbersWithUniqueDigits 2016-08-25" title="$:/StoryList">
+<div list="2016-08-31 WordParse Home 2016-08-27 2016-08-25" title="$:/StoryList">
 <pre></pre>
 </div>
 <div plugin-type="info" title="$:/temp/info-plugin" type="application/json">
@@ -8129,6 +8133,9 @@ I also had a faulty dynamic programming formulation (memoize over the possible s
 
 Looking back, memoization over the number of digits is straightforward and simple.</pre>
 </div>
+<div created="20160901044158751" creator="atsui" modified="20160901044451066" modifier="atsui" tags="Journal" title="2016-08-31">
+<pre>Solved the main logic in [[WordParse]]. There's still a matter of actually cleaning it up and getting the output asked for in the problem statement, but at least I can write out the recursive formulation.</pre>
+</div>
 <div created="20160827193641311" creator="atsui" modified="20160827204734636" modifier="atsui" tags="Writeup" title="CountNumbersWithUniqueDigits">
 <pre>!Problem
 Given an integer `n`, count all numbers between 0 and `10**n` exclusive, that has unique digits.
@@ -8234,6 +8241,39 @@ Nothing more than int arrays are necessary here, but I wanted to practice some [
 It felt a little frustrating figuring out that I have to do my own boxing/unboxing while streaming, but I guess it's fine as long as you're in the Java mentality.
 
 Even though it was straightforward thinking to have a 2D table that you can just read off the answer from, it was much easier to memoize a 1D table that you can do a little more work to derive the answer.</pre>
+</div>
+<div created="20160901044500168" creator="atsui" modified="20160901052710033" modifier="atsui" title="WordParse">
+<pre>!Problem
+You're given a string `s` and a dictionary `d` of words. The string `s` is a concatenation of an indeterminate number of words from `d` and some garbage characters. The algorithm should parse the string `s` into a list of words and garbage strings, such that the number of garbage strings is minimized.
+
+Example input
+
+```
+ababaaa
+b
+```
+
+Example output
+
+```
+5, ['A', 'b', 'A', 'b', 'AAA']
+```
+
+The 5 indicates that there are 5 garbage characters.
+
+!Approach
+This is a dynamic programming problem because every substring of the input string can be considered another input string for the same problem.
+
+At a particular point in the string, we can break the problem down by doing the following:
+
+# Skip `K` characters
+# Match `L` characters to a known word in the dictionary
+# Recurse on the remaining part of the string
+
+We keep a table `dp` with an entry for each offset into the string `s`, that stores the optimal `K` and `L`. We fill this table starting from the end of the string. This way, we can iterate this table and extract the words by skipping the right number of garbage characters and taking substrings.
+
+!Complexity
+`O(n**3)` because of the three nested loops to fill the table of `O(n)` size.</pre>
 </div>
 
 </div>
